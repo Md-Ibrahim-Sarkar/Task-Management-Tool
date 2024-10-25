@@ -23,6 +23,7 @@ function TaskTable() {
     let [openModal, setOpenModal] = useState(false);
     let [tasks, setTasks] = useState([]);
     let [deletePop, setDeletePop] = useState(false)
+    let [searchText, setSearchText] = useState('')
 
     let createHandler = (item) => {
         let updateTasks = [
@@ -49,6 +50,15 @@ function TaskTable() {
             return item.id != id;
         }));
     }
+
+    const searchHandler = (text) => {
+        setSearchText(text);
+
+    }
+
+    let upDatedTasks = tasks.filter(item => {
+        return item.title.toLowerCase().includes(searchText.toLocaleLowerCase())
+    })
 
     return (
         <div className="mt-3 container mx-auto">
@@ -81,10 +91,10 @@ function TaskTable() {
                         delay: 0.05,
                     },
                 }}>
-                <TaskTableHeader />
+                <TaskTableHeader onSearch={searchHandler} />
 
                 <div className="overflow-x-auto">
-                    <Table hoverable>
+                    <Table>
                         <Table.Head>
                             <Table.HeadCell>#</Table.HeadCell>
                             <Table.HeadCell>Title</Table.HeadCell>
@@ -95,7 +105,7 @@ function TaskTable() {
                         </Table.Head>
                         <Table.Body className="divide-y">
 
-                            {tasks.length == 0 ? <NoData /> : tasks.map((item, index) => <TaskItem onDelete={deleteHandler} onEdit={editHandler} data={item} index={index} key={item.id} />)}
+                            {tasks.length == 0 ? <NoData /> : upDatedTasks.map((item, index) => <TaskItem onDelete={deleteHandler} onEdit={editHandler} data={item} index={index} key={item.id} />)}
 
 
                         </Table.Body>
